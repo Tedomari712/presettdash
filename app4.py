@@ -61,7 +61,7 @@ bank_logos = {
     'KCB': '/assets/bank-logos/KCB.png',
     'DTB': '/assets/bank-logos/DTB.png',
     'NCBA': '/assets/bank-logos/NCBA.png',
-    'Prime': '/assets/bank-logos/Prime.png',
+    'Prime': '/assets/bank-logos/Prime.jpg',
     'SBM': '/assets/bank-logos/SBM.png',
     'Standard Investment Bank': '/assets/bank-logos/SIB.png',
     'Others': '/assets/bank-logos/Others.png'
@@ -183,7 +183,7 @@ app.layout = dbc.Container([
             dbc.Card([
                 dbc.CardBody([
                     html.Img(
-                        src='/assets/partner-logos/NALA.png',
+                        src='/assets/partner-logos/Nala.png',
                         className='partner-logo mb-3'
                     ),
                     dbc.Button(
