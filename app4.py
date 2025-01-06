@@ -326,7 +326,96 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         margin=dict(t=100, b=50)
     )
 
-    # Create bank distribution card with logos
+    # Create Peak Volume Analysis Card
+    peak_volume_card = dbc.Card([
+        dbc.CardHeader([
+            html.H4("Pre-settlement Risk Analysis", className="text-center m-0")
+        ]),
+        dbc.CardBody([
+            dbc.Row([
+                dbc.Col([
+                    html.Div([
+                        html.H5("Maximum Monthly Volume", className="text-center mb-2"),
+                        html.H3(f"${partner_data['Volume'].max():,.2f}", 
+                               className="text-center text-danger")
+                    ], className="mb-3"),
+                ], width=4),
+                dbc.Col([
+                    html.Div([
+                        html.H5("Average Monthly Volume", className="text-center mb-2"),
+                        html.H3(f"${partner_data['Volume'].mean():,.2f}", 
+                               className="text-center text-primary")
+                    ], className="mb-3"),
+                ], width=4),
+                dbc.Col([
+                    html.Div([
+                        html.H5("Volume Volatility", className="text-center mb-2"),
+                        html.H3(f"{partner_data['Volume'].std() / partner_data['Volume'].mean():.1%}", 
+                               className="text-center text-warning")
+                    ], className="mb-3"),
+                ], width=4),
+            ]),
+            html.Div([
+                html.P("Suggested Pre-settlement Limit Range:", className="text-center mb-2"),
+                html.H4([
+                    f"${partner_data['Volume'].max() * 1.2:,.2f}",
+                    " - ",
+                    f"${partner_data['Volume'].max() * 1.5:,.2f}"
+                ], className="text-center text-success")
+            ])
+        ])
+    ], className="shadow-sm mb-4")
+
+    # Create Rolling Average Chart
+    rolling_chart = go.Figure()
+    
+    # Add actual volume line
+    rolling_chart.add_trace(go.Scatter(
+        x=partner_data['Month'],
+        y=partner_data['Volume'],
+        name='Actual Volume',
+        line=dict(color='#2E86C1', width=2)
+    ))
+    
+    # Add 3-month rolling average
+    rolling_avg = partner_data['Volume'].rolling(window=3, min_periods=1).mean()
+    rolling_chart.add_trace(go.Scatter(
+        x=partner_data['Month'],
+        y=rolling_avg,
+        name='3-Month Rolling Average',
+        line=dict(color='#E74C3C', width=3, dash='dot')
+    ))
+    
+    rolling_chart.update_layout(
+        title={
+            'text': "Volume Trend Analysis",
+            'y':0.95,
+            'x':0.5,
+            'xanchor': 'center',
+            'yanchor': 'top',
+            'font': dict(size=20, family='Bebas Neue')
+        },
+        yaxis=dict(
+            title="Volume (USD)",
+            titlefont=dict(color="#2E86C1"),
+            tickfont=dict(color="#2E86C1"),
+            gridcolor='rgba(189, 195, 199, 0.2)',
+            tickformat="$,.0f"
+        ),
+        plot_bgcolor='white',
+        height=400,
+        showlegend=True,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
+        ),
+        margin=dict(t=100, b=50)
+    )
+
+# Create bank distribution card with logos
     bank_dist = bank_distribution[data_column]
     max_share = max(bank_dist.values())
     
@@ -392,6 +481,22 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                     ])
                 ])
             ], width=4),
+        ], className="mb-4"),
+
+        # Add Peak Volume Analysis Card
+        dbc.Row([
+            dbc.Col([peak_volume_card], width=12)
+        ]),
+        
+        # Add Rolling Average Chart
+        dbc.Row([
+            dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        dcc.Graph(figure=rolling_chart)
+                    ])
+                ], className="shadow-sm")
+            ], width=12)
         ], className="mb-4"),
         
         dbc.Row([
