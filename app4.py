@@ -90,10 +90,9 @@ app = dash.Dash(
     ]
 )
 
-# This is important for Render deployment
 server = app.server
 
-# Enhanced Custom CSS with responsive features
+# Enhanced Custom CSS with responsive features and improved dark mode
 app.index_string = '''<!DOCTYPE html>
 <html>
     <head>
@@ -224,7 +223,7 @@ app.index_string = '''<!DOCTYPE html>
                 }
             }
             
-            /* Dark mode support */
+            /* Enhanced Dark mode support */
             @media (prefers-color-scheme: dark) {
                 .card {
                     background-color: #2c3e50;
@@ -245,6 +244,24 @@ app.index_string = '''<!DOCTYPE html>
                 
                 .text-info {
                     color: #3498db !important;
+                }
+                
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner td,
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th {
+                    background-color: #2c3e50 !important;
+                    color: #ecf0f1 !important;
+                }
+                
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th {
+                    background-color: #34495e !important;
+                }
+                
+                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner tr:nth-child(odd) td {
+                    background-color: #283747 !important;
+                }
+                
+                .dash-table-container {
+                    border: 1px solid #4a6278;
                 }
             }
         </style>
@@ -420,6 +437,27 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     total_count = partner_data['Count'].sum()
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
+    # Title card with partner logo
+    title_card = dbc.Card([
+        dbc.CardBody([
+            html.Div([
+                html.Img(
+                    src=f'/assets/partner-logos/{partner}.png',
+                    style={
+                        'height': '150px',
+                        'objectFit': 'contain',
+                        'marginBottom': '20px'
+                    }
+                ),
+                html.H2(
+                    f"{partner} Analytics Dashboard",
+                    className="text-center",
+                    style={'fontFamily': 'Bebas Neue'}
+                )
+            ], className="text-center")
+        ])
+    ], className="shadow-sm mb-4")
+
     # Create responsive combined volume and count chart
     combined_chart = go.Figure()
     
@@ -441,12 +479,11 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         marker_color='rgba(231, 76, 60, 0.7)'
     ))
     
-    # Enhanced responsive layout
     combined_chart.update_layout(
         title={
             'text': f"{partner} Transaction Analysis",
-            'y':0.95,
-            'x':0.5,
+            'y': 0.95,
+            'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top',
             'font': dict(size=20, family='Bebas Neue')
@@ -467,7 +504,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             gridcolor='rgba(189, 195, 199, 0.2)'
         ),
         plot_bgcolor='white',
-        height=None,  # Responsive height
+        height=None,
         autosize=True,
         showlegend=True,
         legend=dict(
@@ -480,7 +517,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         margin=dict(t=80, b=30, l=40, r=40)
     )
 
-    # Create responsive Peak Volume Analysis Card
+    # Peak Volume Analysis Card
     peak_volume_card = dbc.Card([
         dbc.CardHeader([
             html.H4("Pre-settlement Risk Analysis", 
@@ -525,10 +562,9 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         ], className="mobile-padding")
     ], className="shadow-sm mb-4")
 
-# Create responsive Rolling Average Chart
+    # Rolling Average Chart
     rolling_chart = go.Figure()
     
-    # Add actual volume line
     rolling_chart.add_trace(go.Scatter(
         x=partner_data['Month'],
         y=partner_data['Volume'],
@@ -536,7 +572,6 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         line=dict(color='#2E86C1', width=2)
     ))
     
-    # Add 3-month rolling average
     rolling_avg = partner_data['Volume'].rolling(window=3, min_periods=1).mean()
     rolling_chart.add_trace(go.Scatter(
         x=partner_data['Month'],
@@ -545,12 +580,11 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         line=dict(color='#E74C3C', width=3, dash='dot')
     ))
     
-    # Enhanced responsive layout for rolling chart
     rolling_chart.update_layout(
         title={
             'text': "Volume Trend Analysis",
-            'y':0.95,
-            'x':0.5,
+            'y': 0.95,
+            'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top',
             'font': dict(size=20, family='Bebas Neue')
@@ -576,7 +610,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         margin=dict(t=80, b=30, l=40, r=40)
     )
 
-    # Create responsive bank distribution with logos
+    # Bank distribution with logos
     bank_dist = bank_distribution[data_column]
     max_share = max(bank_dist.values())
     
@@ -591,7 +625,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         for bank in bank_dist.keys()
     ], className="d-flex justify-content-around align-items-center mb-4 flex-wrap")
 
-    # Enhanced responsive pie chart
+    # Pie chart
     pie_chart = go.Figure(data=[go.Pie(
         labels=list(bank_dist.keys()),
         values=list(bank_dist.values()),
@@ -606,8 +640,8 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     pie_chart.update_layout(
         title={
             'text': "Bank Distribution",
-            'y':0.95,
-            'x':0.5,
+            'y': 0.95,
+            'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top',
             'font': dict(size=20, family='Bebas Neue')
@@ -619,8 +653,54 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         legend=dict(orientation="h", y=-0.1)
     )
 
-    # Return the complete responsive layout
+    # Enhanced transaction table
+    transaction_table = dash_table.DataTable(
+        data=partner_data.to_dict('records'),
+        columns=[
+            {"name": "Month", "id": "Month"},
+            {"name": "Volume (USD)", "id": "Volume", 
+             "type": "numeric", "format": {"specifier": "$,.2f"}},
+            {"name": "Transaction Count", "id": "Count"}
+        ],
+        style_table={
+            'overflowX': 'auto',
+            'minWidth': '100%'
+        },
+        style_cell={
+            'textAlign': 'center',
+            'padding': '10px',
+            'fontFamily': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+            'minWidth': '100px',
+            'whiteSpace': 'normal',
+            'height': 'auto',
+            'backgroundColor': 'rgba(44, 62, 80, 0.9)',
+            'color': '#ecf0f1'
+        },
+        style_header={
+            'fontWeight': 'bold',
+            'border': '1px solid #4a6278',
+            'fontFamily': 'Bebas Neue',
+            'backgroundColor': '#34495e',
+            'color': '#ecf0f1'
+        },
+        style_data={
+            'border': '1px solid #4a6278'
+        },
+        style_data_conditional=[
+            {
+                'if': {'row_index': 'odd'},
+                'backgroundColor': 'rgba(40, 55, 71, 0.9)'
+            }
+        ],
+        css=[{
+            'selector': '.dash-table-container',
+            'rule': 'max-width: 100%; overflow-x: auto; background-color: #2c3e50;'
+        }]
+    )
+
+    # Return complete layout
     return [
+        title_card,
         dbc.Row([
             dbc.Col([
                 dbc.Card([
@@ -650,13 +730,11 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                 ])
             ], xs=12, sm=12, md=4, className="mb-3"),
         ], className="mb-4 g-2"),
-
-        # Add Peak Volume Analysis Card
+        
         dbc.Row([
             dbc.Col([peak_volume_card], width=12)
         ]),
         
-        # Add Rolling Average Chart
         dbc.Row([
             dbc.Col([
                 dbc.Card([
@@ -671,7 +749,6 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             ], width=12)
         ], className="mb-4"),
         
-        # Combined Chart
         dbc.Row([
             dbc.Col([
                 dbc.Card([
@@ -686,7 +763,6 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             ], width=12)
         ], className="mb-4"),
         
-        # Bank Distribution
         dbc.Row([
             dbc.Col([
                 dbc.Card([
@@ -706,7 +782,6 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             ], width=12)
         ], className="mb-4"),
 
-        # Transaction Details Table with responsive design
         dbc.Row([
             dbc.Col([
                 dbc.Card([
@@ -715,47 +790,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                                className="text-center m-0 mobile-text-small")
                     ]),
                     dbc.CardBody([
-                        dash_table.DataTable(
-                            data=partner_data.to_dict('records'),
-                            columns=[
-                                {"name": "Month", "id": "Month"},
-                                {"name": "Volume (USD)", "id": "Volume", 
-                                 "type": "numeric", "format": {"specifier": "$,.2f"}},
-                                {"name": "Transaction Count", "id": "Count"}
-                            ],
-                            style_table={
-                                'overflowX': 'auto',
-                                'minWidth': '100%'
-                            },
-                            style_cell={
-                                'textAlign': 'center',
-                                'padding': '10px',
-                                'backgroundColor': 'white',
-                                'fontFamily': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                                'minWidth': '100px',
-                                'whiteSpace': 'normal',
-                                'height': 'auto'
-                            },
-                            style_header={
-                                'backgroundColor': '#f8f9fa',
-                                'fontWeight': 'bold',
-                                'border': '1px solid #dee2e6',
-                                'fontFamily': 'Bebas Neue'
-                            },
-                            style_data={
-                                'border': '1px solid #dee2e6'
-                            },
-                            style_data_conditional=[
-                                {
-                                    'if': {'row_index': 'odd'},
-                                    'backgroundColor': '#f8f9fa'
-                                }
-                            ],
-                            css=[{
-                                'selector': '.dash-table-container',
-                                'rule': 'max-width: 100%; overflow-x: auto;'
-                            }]
-                        )
+                        transaction_table
                     ], className="mobile-padding")
                 ], className="shadow-sm")
             ], width=12)
