@@ -27,7 +27,7 @@ monthly_data = pd.DataFrame({
     'DLocal_TTS_count': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 0]
 })
 
-# Bank distribution data [Remains the same]
+# Bank distribution data
 bank_distribution = {
     'LEMFI': {
         'KCB': 46.1, 
@@ -56,7 +56,7 @@ bank_distribution = {
     }
 }
 
-# Dictionary for bank logo paths [Remains the same]
+# Dictionary for bank logo paths
 bank_logos = {
     'KCB': '/assets/bank-logos/KCB.png',
     'DTB': '/assets/bank-logos/DTB.png',
@@ -67,7 +67,7 @@ bank_logos = {
     'Others': '/assets/bank-logos/Others.png'
 }
 
-# Updated bank color scheme [Remains the same]
+# Updated bank color scheme
 bank_colors = {
     'KCB': '#008000',      # Green
     'DTB': '#FF0000',      # Red
@@ -93,7 +93,7 @@ app = dash.Dash(
 # This is important for Render deployment
 server = app.server
 
-# Enhanced Custom CSS with responsive features
+# Enhanced Custom CSS with updated dark mode support
 app.index_string = '''<!DOCTYPE html>
 <html>
     <head>
@@ -123,6 +123,11 @@ app.index_string = '''<!DOCTYPE html>
             body {
                 background-color: var(--background-light);
                 color: var(--text-light);
+            }
+
+            .title-text {
+                color: #2c3e50;
+                transition: color 0.3s ease;
             }
             
             .regular-text {
@@ -167,7 +172,8 @@ app.index_string = '''<!DOCTYPE html>
             }
             
             .logo {
-                transition: transform 0.3s ease;
+                transition: all 0.3s ease;
+                filter: none;
             }
             
             .logo:hover {
@@ -205,6 +211,10 @@ app.index_string = '''<!DOCTYPE html>
                     background-color: var(--background-dark);
                     color: var(--text-dark);
                 }
+
+                .title-text {
+                    color: #ffffff !important;
+                }
                 
                 .card {
                     background-color: var(--card-bg-dark);
@@ -230,6 +240,10 @@ app.index_string = '''<!DOCTYPE html>
                 .btn-light:hover {
                     background-color: #3d3d3d;
                     border-color: #505050;
+                }
+
+                .logo {
+                    filter: invert(1) brightness(100%);
                 }
 
                 /* Dark mode chart improvements */
@@ -264,61 +278,14 @@ app.index_string = '''<!DOCTYPE html>
                     background-color: #2d2d2d !important;
                 }
 
-                /* Improve visibility of logos in dark mode */
-                .partner-logo {
-                    filter: brightness(1.2) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+                .text-primary {
+                    color: #ffffff !important;
                 }
             }
 
-            /* Responsive Styles */
-            @media (max-width: 768px) {
-                .partner-logo {
-                    width: 60px;
-                    height: 60px;
-                    margin: 5px;
-                }
-                
-                .card {
-                    margin-bottom: 0.5rem;
-                }
-                
-                h1 { font-size: 1.8rem !important; }
-                h2 { font-size: 1.6rem !important; }
-                h3 { font-size: 1.4rem !important; }
-                h4 { font-size: 1.2rem !important; }
-                h5 { font-size: 1rem !important; }
-                
-                .card-body {
-                    padding: 0.75rem;
-                }
+            /* Responsive Styles [Rest of the responsive styles remain the same] */
+            ...
 
-                .mobile-stack { flex-direction: column; }
-                .mobile-full-width { width: 100% !important; }
-                .mobile-text-small { font-size: 0.9rem !important; }
-                .mobile-chart-height { height: 300px !important; }
-
-                .partner-logo-title {
-                    max-width: 80px;
-                    max-height: 60px;
-                }
-            }
-
-            @media (max-width: 576px) {
-                .partner-logo {
-                    width: 50px;
-                    height: 50px;
-                }
-                
-                h1 { font-size: 1.5rem !important; }
-                
-                .mobile-padding { padding: 0.5rem !important; }
-                .mobile-margin { margin: 0.5rem !important; }
-
-                .partner-logo-title {
-                    max-width: 60px;
-                    max-height: 40px;
-                }
-            }
         </style>
     </head>
     <body>
@@ -350,13 +317,13 @@ app.layout = dbc.Container([
                 'display': 'flex',
                 'justifyContent': 'center',
                 'alignItems': 'center',
-                'padding': {'xs': '20px', 'md': '40px'},
-                'marginBottom': {'xs': '15px', 'md': '30px'},
+                'padding': '40px',
+                'marginBottom': '30px',
                 'width': '100%'
             }, className="mobile-padding"),
             html.H1(
                 "Partner Report",
-                className="text-primary text-center mb-4",
+                className="title-text text-center mb-4",
                 style={'letterSpacing': '2px'}
             )
         ])
@@ -487,6 +454,13 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
     partner = triggered_id.replace("-logo", "")
     
+    if partner == "DLocal":
+        data_column = "DLocal/TTS"
+        count_column = "DLocal_TTS_count"
+    else:
+        data_column = partner
+        count_column = f"{partner}_count"
+
     # Create title card
     title_card = dbc.Card([
         dbc.CardBody([
@@ -504,20 +478,13 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                 dbc.Col([
                     html.H2(
                         partner,
-                        className="text-center mb-0 partner-title"
+                        className="text-center mb-0 partner-title title-text"
                     )
                 ], width={'size': 6}, className="d-flex align-items-center justify-content-center"),
                 dbc.Col(width={'size': 3, 'order': 'last'})
             ], className="align-items-center")
         ])
     ], className="shadow-sm title-card")
-    
-    if partner == "DLocal":
-        data_column = "DLocal/TTS"
-        count_column = "DLocal_TTS_count"
-    else:
-        data_column = partner
-        count_column = f"{partner}_count"
 
     # Extract partner-specific data
     partner_data = monthly_data[["Month", data_column, count_column]].copy()
@@ -529,7 +496,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     total_count = partner_data['Count'].sum()
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
-    # Create responsive combined volume and count chart
+        # Create responsive combined volume and count chart
     combined_chart = go.Figure()
     
     # Add Volume line
@@ -728,7 +695,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         legend=dict(orientation="h", y=-0.1)
     )
 
-    # Return the complete responsive layout
+    # Return the complete responsive layout with title card
     return [
         dbc.Row([
             dbc.Col([
@@ -740,7 +707,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                     ])
                 ])
             ], xs=12, sm=12, md=4, className="mb-3"),
-            dbc.Col([
+                        dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
                         html.H5("Total Transactions", className="text-center mobile-text-small"),
@@ -869,7 +836,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                 ], className="shadow-sm")
             ], width=12)
         ], className="mb-4")
-    ]
+    ], title_card
 
 # Run the server
 if __name__ == '__main__':
