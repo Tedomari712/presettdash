@@ -444,6 +444,10 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         "Cellulant": "Cellulant.png",
         "DLocal": "DLocal.png"
     }
+
+    logo_height = '100px'
+    if partner == "LEMFI":
+        logo_height = '200px'
     
     title_card = dbc.Card([
         dbc.CardBody([
