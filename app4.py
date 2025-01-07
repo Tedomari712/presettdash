@@ -438,21 +438,23 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
     # Title card with partner logo
+    partner_logo_map = {
+        "LEMFI": "LEMFI.png",
+        "NALA": "Nala.png",
+        "Cellulant": "Cellulant.png",
+        "DLocal": "DLocal.png"
+    }
+    
     title_card = dbc.Card([
         dbc.CardBody([
             html.Div([
                 html.Img(
-                    src=f'/assets/partner-logos/{partner}.png',
+                    src=f'/assets/partner-logos/{partner_logo_map[partner]}',
                     style={
-                        'height': '150px',
+                        'height': '100px',
                         'objectFit': 'contain',
-                        'marginBottom': '20px'
+                        'marginBottom': '10px'
                     }
-                ),
-                html.H2(
-                    f"{partner} Analytics Dashboard",
-                    className="text-center",
-                    style={'fontFamily': 'Bebas Neue'}
                 )
             ], className="text-center")
         ])
