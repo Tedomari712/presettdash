@@ -110,7 +110,8 @@ app.index_string = '''<!DOCTYPE html>
                 --border-light: #dee2e6;
                 
                 --background-dark: #121212;
-                --card-bg-dark: #1e1e1e;
+                --card-bg-dark: #121212;
+                --chart-grid-color: rgba(128, 128, 128, 0.2);
                 --text-dark: #ffffff;
                 --border-dark: #404040;
             }
@@ -156,11 +157,12 @@ app.index_string = '''<!DOCTYPE html>
             }
 
             .partner-logo-title {
-                max-width: 150px;
-                height: 100px;
+                max-width: 200px;
+                height: 120px;
                 object-fit: contain;
                 margin: auto;
                 display: block;
+                padding: 10px;
             }
             
             .market-share-card {
@@ -169,7 +171,7 @@ app.index_string = '''<!DOCTYPE html>
             
             .logo {
                 transition: all 0.3s ease;
-                display: none;
+                background-color: transparent;
             }
 
             .logo.light {
@@ -177,7 +179,8 @@ app.index_string = '''<!DOCTYPE html>
             }
 
             .logo.dark {
-                display: none;
+                display: block;
+                background-color: var(--background-dark);
             }
 
             /* Chart Styles */
@@ -189,12 +192,28 @@ app.index_string = '''<!DOCTYPE html>
                 width: 100% !important;
             }
 
-            /* Dark Mode */
-            @media (prefers-color-scheme: dark) {
-                body {
-                    background-color: var(--background-dark);
-                    color: var(--text-dark);
-                }
+            /* Dark Mode */ 
+@media (prefers-color-scheme: dark) {
+    .js-plotly-plot .plotly .main-svg {
+        background-color: var(--background-dark) !important;
+    }
+
+    .js-plotly-plot .plotly .gridlayer path {
+        stroke: var(--chart-grid-color) !important;
+    }
+
+    .js-plotly-plot .plotly .bglayer rect {
+        fill: var(--background-dark) !important;
+    }
+
+    .js-plotly-plot .plotly .plotbg {
+        fill: var(--background-dark) !important;
+    }
+
+    .js-plotly-plot .plotly .bg {
+        fill: var(--background-dark) !important;
+    }
+}
 
                 .title-text {
                     color: #ffffff !important;
@@ -497,7 +516,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     total_count = partner_data['Count'].sum()
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
-    # Create charts with updated dark mode compatibility
+# Create charts with updated dark mode compatibility
     combined_chart = go.Figure()
     combined_chart.add_trace(go.Scatter(
         x=partner_data['Month'],
@@ -516,31 +535,36 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     ))
     
     combined_chart.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(18, 18, 18, 0)',
+        paper_bgcolor='rgba(18, 18, 18, 0)',
         title={
             'text': f"{partner} Transaction Analysis",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top',
-            'font': dict(size=20, family='Bebas Neue')
+            'font': dict(size=20, family='Bebas Neue', color='#ffffff')
         },
+        xaxis=dict(
+            showgrid=True,
+            gridcolor='rgba(128, 128, 128, 0.2)',
+            tickfont=dict(color='#ffffff')
+        ),
         yaxis=dict(
             title="Volume (USD)",
             titlefont=dict(color="#2E86C1"),
-            tickfont=dict(color="#2E86C1"),
-            gridcolor='rgba(189, 195, 199, 0.2)',
+            tickfont=dict(color='#ffffff'),
+            gridcolor='rgba(128, 128, 128, 0.2)',
             tickformat="$,.0f",
             showgrid=True
         ),
         yaxis2=dict(
             title="Transaction Count",
             titlefont=dict(color="#E74C3C"),
-            tickfont=dict(color="#E74C3C"),
+            tickfont=dict(color='#ffffff'),
             overlaying="y",
             side="right",
-            gridcolor='rgba(189, 195, 199, 0.2)',
+            gridcolor='rgba(128, 128, 128, 0.2)',
             showgrid=False
         ),
         height=500,
@@ -550,7 +574,8 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             yanchor="bottom",
             y=1.02,
             xanchor="right",
-            x=1
+            x=1,
+            font=dict(color='#ffffff')
         ),
         margin=dict(t=80, b=30, l=40, r=40)
     )
@@ -573,21 +598,26 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     ))
     
     rolling_chart.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(18, 18, 18, 0)',
+        paper_bgcolor='rgba(18, 18, 18, 0)',
         title={
             'text': "Volume Trend Analysis",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top',
-            'font': dict(size=20, family='Bebas Neue')
+            'font': dict(size=20, family='Bebas Neue', color='#ffffff')
         },
+        xaxis=dict(
+            showgrid=True,
+            gridcolor='rgba(128, 128, 128, 0.2)',
+            tickfont=dict(color='#ffffff')
+        ),
         yaxis=dict(
             title="Volume (USD)",
             titlefont=dict(color="#2E86C1"),
-            tickfont=dict(color="#2E86C1"),
-            gridcolor='rgba(189, 195, 199, 0.2)',
+            tickfont=dict(color='#ffffff'),
+            gridcolor='rgba(128, 128, 128, 0.2)',
             tickformat="$,.0f",
             showgrid=True
         ),
@@ -598,27 +628,13 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             yanchor="bottom",
             y=1.02,
             xanchor="right",
-            x=1
+            x=1,
+            font=dict(color='#ffffff')
         ),
         margin=dict(t=80, b=30, l=40, r=40)
     )
 
-# Create bank distribution with improved dark mode visibility
-    bank_dist = bank_distribution[data_column]
-    max_share = max(bank_dist.values())
-    
-    bank_images = html.Div([
-        html.Div([
-            html.Img(src=bank_logos[bank], 
-                    className='partner-logo'),
-            html.Div(f"{bank_dist[bank]}%", 
-                    className="mobile-text-small",
-                    style={'textAlign': 'center', 'marginTop': '5px'})
-        ], style={'textAlign': 'center'})
-        for bank in bank_dist.keys()
-    ], className="d-flex justify-content-around align-items-center mb-4 flex-wrap")
-
-    # Enhanced pie chart with dark mode compatibility
+    # Create bank distribution with improved dark mode visibility
     pie_chart = go.Figure(data=[go.Pie(
         labels=list(bank_dist.keys()),
         values=list(bank_dist.values()),
@@ -627,24 +643,28 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         textinfo='percent+label',
         textposition='outside',
         pull=[0.1 if share == max_share else 0 for share in bank_dist.values()],
-        textfont=dict(family='Bebas Neue', size=12)
+        textfont=dict(family='Bebas Neue', size=12, color='#ffffff')
     )])
 
     pie_chart.update_layout(
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(18, 18, 18, 0)',
+        paper_bgcolor='rgba(18, 18, 18, 0)',
         title={
             'text': "Bank Distribution",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
             'yanchor': 'top',
-            'font': dict(size=20, family='Bebas Neue')
+            'font': dict(size=20, family='Bebas Neue', color='#ffffff')
         },
         height=500,
         margin=dict(t=80, b=30, l=20, r=20),
         showlegend=True,
-        legend=dict(orientation="h", y=-0.1)
+        legend=dict(
+            orientation="h",
+            y=-0.1,
+            font=dict(color='#ffffff')
+        )
     )
 
     # Return the complete layout with title card
