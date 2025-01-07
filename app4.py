@@ -27,7 +27,7 @@ monthly_data = pd.DataFrame({
     'DLocal_TTS_count': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 0]
 })
 
-# Bank distribution data
+# Bank distribution data [Remains the same]
 bank_distribution = {
     'LEMFI': {
         'KCB': 46.1, 
@@ -56,7 +56,7 @@ bank_distribution = {
     }
 }
 
-# Dictionary for bank logo paths
+# Dictionary for bank logo paths [Remains the same]
 bank_logos = {
     'KCB': '/assets/bank-logos/KCB.png',
     'DTB': '/assets/bank-logos/DTB.png',
@@ -67,7 +67,7 @@ bank_logos = {
     'Others': '/assets/bank-logos/Others.png'
 }
 
-# Updated bank color scheme
+# Updated bank color scheme [Remains the same]
 bank_colors = {
     'KCB': '#008000',      # Green
     'DTB': '#FF0000',      # Red
@@ -75,7 +75,7 @@ bank_colors = {
     'Prime': '#00008B',    # Dark Blue
     'SBM': '#87CEEB',      # Light Blue
     'Others': '#FFD700',   # Yellow
-    'Standard Investment Bank': '#00008B'  # Dark Blue (same as Prime)
+    'Standard Investment Bank': '#00008B'  # Dark Blue
 }
 
 # Initialize the app with custom styling
@@ -84,13 +84,16 @@ app = dash.Dash(
     external_stylesheets=[
         dbc.themes.FLATLY,
         'https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap'
+    ],
+    meta_tags=[
+        {"name": "viewport", "content": "width=device-width, initial-scale=1.0"}
     ]
 )
 
 # This is important for Render deployment
 server = app.server
 
-# Custom CSS
+# Enhanced Custom CSS with responsive features
 app.index_string = '''<!DOCTYPE html>
 <html>
     <head>
@@ -102,35 +105,147 @@ app.index_string = '''<!DOCTYPE html>
             * {
                 font-family: 'Bebas Neue', sans-serif;
             }
+            
             .regular-text {
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             }
+            
             .card-body p, .card-body text {
                 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             }
+            
             .card {
                 margin-bottom: 1rem;
                 border-radius: 15px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
                 transition: transform 0.2s;
             }
+            
             .card:hover {
                 transform: translateY(-5px);
             }
+            
             .partner-logo {
                 width: 100px;
                 height: 100px;
                 object-fit: contain;
                 margin: 10px;
             }
+            
             .market-share-card {
                 background: linear-gradient(135deg, #f6f9fc 0%, #f1f4f8 100%);
             }
+            
             .logo {
                 transition: transform 0.3s ease;
             }
+            
             .logo:hover {
                 transform: scale(1.05);
+            }
+            
+            /* Enhanced Responsive Styles */
+            .js-plotly-plot {
+                width: 100% !important;
+            }
+
+            .js-plotly-plot .plotly {
+                width: 100% !important;
+            }
+            
+            @media (max-width: 768px) {
+                .partner-logo {
+                    width: 60px;
+                    height: 60px;
+                    margin: 5px;
+                }
+                
+                .card {
+                    margin-bottom: 0.5rem;
+                }
+                
+                h1 {
+                    font-size: 1.8rem !important;
+                }
+                
+                h3 {
+                    font-size: 1.4rem !important;
+                }
+                
+                h4 {
+                    font-size: 1.2rem !important;
+                }
+                
+                h5 {
+                    font-size: 1rem !important;
+                }
+                
+                .dash-table-container {
+                    overflow-x: auto;
+                }
+                
+                .card-body {
+                    padding: 0.75rem;
+                }
+                
+                .mobile-stack {
+                    flex-direction: column;
+                }
+                
+                .mobile-full-width {
+                    width: 100% !important;
+                }
+                
+                .mobile-text-small {
+                    font-size: 0.9rem !important;
+                }
+                
+                .mobile-chart-height {
+                    height: 300px !important;
+                }
+            }
+            
+            @media (max-width: 576px) {
+                .partner-logo {
+                    width: 50px;
+                    height: 50px;
+                }
+                
+                h1 {
+                    font-size: 1.5rem !important;
+                }
+                
+                .mobile-padding {
+                    padding: 0.5rem !important;
+                }
+                
+                .mobile-margin {
+                    margin: 0.5rem !important;
+                }
+            }
+            
+            /* Dark mode support */
+            @media (prefers-color-scheme: dark) {
+                .card {
+                    background-color: #2c3e50;
+                    color: #ecf0f1;
+                }
+                
+                .market-share-card {
+                    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                }
+                
+                .text-primary {
+                    color: #3498db !important;
+                }
+                
+                .text-success {
+                    color: #2ecc71 !important;
+                }
+                
+                .text-info {
+                    color: #3498db !important;
+                }
             }
         </style>
     </head>
@@ -144,31 +259,49 @@ app.index_string = '''<!DOCTYPE html>
     </body>
 </html>'''
 
-# App layout
+# App layout with enhanced responsive features
 app.layout = dbc.Container([
-    # Header with logo and title
+    # Enhanced Header with responsive logo and title
     dbc.Row([
         dbc.Col([
             html.Div([
-                html.Img(src='/assets/vngrd.PNG',
-                     className='logo', 
-                     style={'height': '150px', 'object-fit': 'contain'})
-            ], style={'display': 'flex', 'justifyContent': 'center', 'alignItems': 'center', 'padding': '40px', 'marginBottom': '30px', 'width': '100%'}),
-            html.H1("Partner Report", 
-                   className="text-primary text-center mb-4",
-                   style={'letterSpacing': '2px'})
+                html.Img(
+                    src='/assets/vngrd.PNG',
+                    className='logo',
+                    style={
+                        'height': '150px',
+                        'max-width': '100%',
+                        'object-fit': 'contain'
+                    }
+                )
+            ], style={
+                'display': 'flex',
+                'justifyContent': 'center',
+                'alignItems': 'center',
+                'padding': {'xs': '20px', 'md': '40px'},
+                'marginBottom': {'xs': '15px', 'md': '30px'},
+                'width': '100%'
+            }, className="mobile-padding"),
+            html.H1(
+                "Partner Report",
+                className="text-primary text-center mb-4",
+                style={'letterSpacing': '2px'}
+            )
         ])
     ]),
 
-    # Partner selection row with logos
+    # Enhanced Partner selection row with responsive cards
     dbc.Row([
+        # LEMFI Card
         dbc.Col([
             dbc.Card([
                 dbc.CardBody([
-                    html.Img(
-                        src='/assets/partner-logos/LEMFI.png',
-                        className='partner-logo mb-3'
-                    ),
+                    html.Div([
+                        html.Img(
+                            src='/assets/partner-logos/LEMFI.png',
+                            className='partner-logo mb-3'
+                        )
+                    ], className="text-center"),
                     dbc.Button(
                         "Select LEMFI",
                         id="LEMFI-logo",
@@ -176,16 +309,20 @@ app.layout = dbc.Container([
                         className="w-100",
                         n_clicks=0
                     )
-                ])
-            ], className="market-share-card")
-        ], width=3),
+                ], className="mobile-padding")
+            ], className="market-share-card h-100")
+        ], xs=12, sm=6, md=3, className="mb-3"),
+
+        # NALA Card
         dbc.Col([
             dbc.Card([
                 dbc.CardBody([
-                    html.Img(
-                        src='/assets/partner-logos/Nala.png',
-                        className='partner-logo mb-3'
-                    ),
+                    html.Div([
+                        html.Img(
+                            src='/assets/partner-logos/Nala.png',
+                            className='partner-logo mb-3'
+                        )
+                    ], className="text-center"),
                     dbc.Button(
                         "Select NALA",
                         id="NALA-logo",
@@ -193,16 +330,20 @@ app.layout = dbc.Container([
                         className="w-100",
                         n_clicks=0
                     )
-                ])
-            ], className="market-share-card")
-        ], width=3),
+                ], className="mobile-padding")
+            ], className="market-share-card h-100")
+        ], xs=12, sm=6, md=3, className="mb-3"),
+
+        # Cellulant Card
         dbc.Col([
             dbc.Card([
                 dbc.CardBody([
-                    html.Img(
-                        src='/assets/partner-logos/Cellulant.png',
-                        className='partner-logo mb-3'
-                    ),
+                    html.Div([
+                        html.Img(
+                            src='/assets/partner-logos/Cellulant.png',
+                            className='partner-logo mb-3'
+                        )
+                    ], className="text-center"),
                     dbc.Button(
                         "Select Cellulant",
                         id="Cellulant-logo",
@@ -210,16 +351,20 @@ app.layout = dbc.Container([
                         className="w-100",
                         n_clicks=0
                     )
-                ])
-            ], className="market-share-card")
-        ], width=3),
+                ], className="mobile-padding")
+            ], className="market-share-card h-100")
+        ], xs=12, sm=6, md=3, className="mb-3"),
+
+        # DLocal Card
         dbc.Col([
             dbc.Card([
                 dbc.CardBody([
-                    html.Img(
-                        src='/assets/partner-logos/DLocal.png',
-                        className='partner-logo mb-3'
-                    ),
+                    html.Div([
+                        html.Img(
+                            src='/assets/partner-logos/DLocal.png',
+                            className='partner-logo mb-3'
+                        )
+                    ], className="text-center"),
                     dbc.Button(
                         "Select DLocal",
                         id="DLocal-logo",
@@ -227,18 +372,22 @@ app.layout = dbc.Container([
                         className="w-100",
                         n_clicks=0
                     )
-                ])
-            ], className="market-share-card")
-        ], width=3),
-    ], className="mb-4"),
+                ], className="mobile-padding")
+            ], className="market-share-card h-100")
+        ], xs=12, sm=6, md=3, className="mb-3"),
+    ], className="mb-4 g-2"),
 
-    # Content section
+    # Content section with responsive container
     dbc.Row([
         dbc.Col([
-            html.Div(id="partner-details", children=[])
+            html.Div(
+                id="partner-details",
+                children=[],
+                className="mobile-padding"
+            )
         ], width=12)
     ])
-], fluid=True)
+], fluid=True, className="px-2 px-md-4")
 
 @app.callback(
     Output("partner-details", "children"),
@@ -271,8 +420,10 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     total_count = partner_data['Count'].sum()
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
-    # Create combined volume and count chart
+    # Create responsive combined volume and count chart
     combined_chart = go.Figure()
+    
+    # Add Volume line
     combined_chart.add_trace(go.Scatter(
         x=partner_data['Month'],
         y=partner_data['Volume'],
@@ -281,6 +432,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         line=dict(color='#2E86C1', width=3)
     ))
     
+    # Add Count bars
     combined_chart.add_trace(go.Bar(
         x=partner_data['Month'],
         y=partner_data['Count'],
@@ -289,6 +441,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         marker_color='rgba(231, 76, 60, 0.7)'
     ))
     
+    # Enhanced responsive layout
     combined_chart.update_layout(
         title={
             'text': f"{partner} Transaction Analysis",
@@ -314,7 +467,8 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             gridcolor='rgba(189, 195, 199, 0.2)'
         ),
         plot_bgcolor='white',
-        height=500,
+        height=None,  # Responsive height
+        autosize=True,
         showlegend=True,
         legend=dict(
             orientation="h",
@@ -323,50 +477,55 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             xanchor="right",
             x=1
         ),
-        margin=dict(t=100, b=50)
+        margin=dict(t=80, b=30, l=40, r=40)
     )
 
-    # Create Peak Volume Analysis Card
+    # Create responsive Peak Volume Analysis Card
     peak_volume_card = dbc.Card([
         dbc.CardHeader([
-            html.H4("Pre-settlement Risk Analysis", className="text-center m-0")
+            html.H4("Pre-settlement Risk Analysis", 
+                   className="text-center m-0 mobile-text-small")
         ]),
         dbc.CardBody([
             dbc.Row([
                 dbc.Col([
                     html.Div([
-                        html.H5("Maximum Monthly Volume", className="text-center mb-2"),
+                        html.H5("Maximum Monthly Volume", 
+                               className="text-center mb-2 mobile-text-small"),
                         html.H3(f"${partner_data['Volume'].max():,.2f}", 
-                               className="text-center text-danger")
+                               className="text-center text-danger mobile-text-small")
                     ], className="mb-3"),
-                ], width=4),
+                ], xs=12, sm=12, md=4),
                 dbc.Col([
                     html.Div([
-                        html.H5("Average Monthly Volume", className="text-center mb-2"),
+                        html.H5("Average Monthly Volume", 
+                               className="text-center mb-2 mobile-text-small"),
                         html.H3(f"${partner_data['Volume'].mean():,.2f}", 
-                               className="text-center text-primary")
+                               className="text-center text-primary mobile-text-small")
                     ], className="mb-3"),
-                ], width=4),
+                ], xs=12, sm=12, md=4),
                 dbc.Col([
                     html.Div([
-                        html.H5("Volume Volatility", className="text-center mb-2"),
+                        html.H5("Volume Volatility", 
+                               className="text-center mb-2 mobile-text-small"),
                         html.H3(f"{partner_data['Volume'].std() / partner_data['Volume'].mean():.1%}", 
-                               className="text-center text-warning")
+                               className="text-center text-warning mobile-text-small")
                     ], className="mb-3"),
-                ], width=4),
-            ]),
+                ], xs=12, sm=12, md=4),
+            ], className="mobile-stack"),
             html.Div([
-                html.P("Suggested Pre-settlement Limit Range:", className="text-center mb-2"),
+                html.P("Suggested Pre-settlement Limit Range:", 
+                       className="text-center mb-2 mobile-text-small"),
                 html.H4([
                     f"${partner_data['Volume'].max() * 1.2:,.2f}",
                     " - ",
                     f"${partner_data['Volume'].max() * 1.5:,.2f}"
-                ], className="text-center text-success")
+                ], className="text-center text-success mobile-text-small")
             ])
-        ])
+        ], className="mobile-padding")
     ], className="shadow-sm mb-4")
 
-    # Create Rolling Average Chart
+# Create responsive Rolling Average Chart
     rolling_chart = go.Figure()
     
     # Add actual volume line
@@ -386,6 +545,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         line=dict(color='#E74C3C', width=3, dash='dot')
     ))
     
+    # Enhanced responsive layout for rolling chart
     rolling_chart.update_layout(
         title={
             'text': "Volume Trend Analysis",
@@ -403,7 +563,8 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             tickformat="$,.0f"
         ),
         plot_bgcolor='white',
-        height=400,
+        height=None,
+        autosize=True,
         showlegend=True,
         legend=dict(
             orientation="h",
@@ -412,22 +573,25 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             xanchor="right",
             x=1
         ),
-        margin=dict(t=100, b=50)
+        margin=dict(t=80, b=30, l=40, r=40)
     )
 
-# Create bank distribution card with logos
+    # Create responsive bank distribution with logos
     bank_dist = bank_distribution[data_column]
     max_share = max(bank_dist.values())
     
     bank_images = html.Div([
         html.Div([
-            html.Img(src=bank_logos[bank], className='partner-logo'),
+            html.Img(src=bank_logos[bank], 
+                    className='partner-logo'),
             html.Div(f"{bank_dist[bank]}%", 
+                    className="mobile-text-small",
                     style={'textAlign': 'center', 'marginTop': '5px'})
         ], style={'textAlign': 'center'})
         for bank in bank_dist.keys()
-    ], className="d-flex justify-content-around align-items-center mb-4")
+    ], className="d-flex justify-content-around align-items-center mb-4 flex-wrap")
 
+    # Enhanced responsive pie chart
     pie_chart = go.Figure(data=[go.Pie(
         labels=list(bank_dist.keys()),
         values=list(bank_dist.values()),
@@ -436,7 +600,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         textinfo='percent+label',
         textposition='outside',
         pull=[0.1 if share == max_share else 0 for share in bank_dist.values()],
-        textfont=dict(family='Bebas Neue')
+        textfont=dict(family='Bebas Neue', size=12)
     )])
 
     pie_chart.update_layout(
@@ -448,40 +612,44 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             'yanchor': 'top',
             'font': dict(size=20, family='Bebas Neue')
         },
-        height=500,
-        margin=dict(l=20, r=20, t=100, b=50),
+        height=None,
+        autosize=True,
+        margin=dict(t=80, b=30, l=20, r=20),
         showlegend=True,
         legend=dict(orientation="h", y=-0.1)
     )
 
-    # Return the complete layout
+    # Return the complete responsive layout
     return [
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H5("Total Volume", className="text-center"),
-                        html.H3(f"${total_volume:,.2f}", className="text-center text-primary")
+                        html.H5("Total Volume", className="text-center mobile-text-small"),
+                        html.H3(f"${total_volume:,.2f}", 
+                               className="text-center text-primary mobile-text-small")
                     ])
                 ])
-            ], width=4),
+            ], xs=12, sm=12, md=4, className="mb-3"),
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H5("Total Transactions", className="text-center"),
-                        html.H3(f"{total_count:,}", className="text-center text-success")
+                        html.H5("Total Transactions", className="text-center mobile-text-small"),
+                        html.H3(f"{total_count:,}", 
+                               className="text-center text-success mobile-text-small")
                     ])
                 ])
-            ], width=4),
+            ], xs=12, sm=12, md=4, className="mb-3"),
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H5("Average Transaction", className="text-center"),
-                        html.H3(f"${avg_transaction:,.2f}", className="text-center text-info")
+                        html.H5("Average Transaction", className="text-center mobile-text-small"),
+                        html.H3(f"${avg_transaction:,.2f}", 
+                               className="text-center text-info mobile-text-small")
                     ])
                 ])
-            ], width=4),
-        ], className="mb-4"),
+            ], xs=12, sm=12, md=4, className="mb-3"),
+        ], className="mb-4 g-2"),
 
         # Add Peak Volume Analysis Card
         dbc.Row([
@@ -493,42 +661,58 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        dcc.Graph(figure=rolling_chart)
+                        dcc.Graph(
+                            figure=rolling_chart,
+                            config={'responsive': True},
+                            className="mobile-chart-height"
+                        )
                     ])
                 ], className="shadow-sm")
             ], width=12)
         ], className="mb-4"),
         
+        # Combined Chart
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        dcc.Graph(figure=combined_chart)
+                        dcc.Graph(
+                            figure=combined_chart,
+                            config={'responsive': True},
+                            className="mobile-chart-height"
+                        )
                     ])
                 ], className="shadow-sm")
             ], width=12)
         ], className="mb-4"),
         
+        # Bank Distribution
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader([
-                        html.H4("Bank Distribution", className="text-center m-0")
+                        html.H4("Bank Distribution", 
+                               className="text-center m-0 mobile-text-small")
                     ]),
                     dbc.CardBody([
                         bank_images,
-                        dcc.Graph(figure=pie_chart)
+                        dcc.Graph(
+                            figure=pie_chart,
+                            config={'responsive': True},
+                            className="mobile-chart-height"
+                        )
                     ])
                 ], className="shadow-sm")
             ], width=12)
         ], className="mb-4"),
 
-        # Transaction Details Table
+        # Transaction Details Table with responsive design
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader([
-                        html.H4("Transaction Details", className="text-center m-0")
+                        html.H4("Transaction Details", 
+                               className="text-center m-0 mobile-text-small")
                     ]),
                     dbc.CardBody([
                         dash_table.DataTable(
@@ -539,12 +723,18 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                                  "type": "numeric", "format": {"specifier": "$,.2f"}},
                                 {"name": "Transaction Count", "id": "Count"}
                             ],
-                            style_table={'overflowX': 'auto'},
+                            style_table={
+                                'overflowX': 'auto',
+                                'minWidth': '100%'
+                            },
                             style_cell={
                                 'textAlign': 'center',
                                 'padding': '10px',
                                 'backgroundColor': 'white',
-                                'fontFamily': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+                                'fontFamily': '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                                'minWidth': '100px',
+                                'whiteSpace': 'normal',
+                                'height': 'auto'
                             },
                             style_header={
                                 'backgroundColor': '#f8f9fa',
@@ -560,9 +750,13 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                                     'if': {'row_index': 'odd'},
                                     'backgroundColor': '#f8f9fa'
                                 }
-                            ]
+                            ],
+                            css=[{
+                                'selector': '.dash-table-container',
+                                'rule': 'max-width: 100%; overflow-x: auto;'
+                            }]
                         )
-                    ])
+                    ], className="mobile-padding")
                 ], className="shadow-sm")
             ], width=12)
         ], className="mb-4")
