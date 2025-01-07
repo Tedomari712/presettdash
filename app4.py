@@ -64,7 +64,7 @@ bank_logos = {
     'Prime': '/assets/bank-logos/Prime.jpg',
     'SBM': '/assets/bank-logos/SBM.png',
     'Standard Investment Bank': '/assets/bank-logos/SIB.png',
-    'Others': '/assets/bank-logos/Others.png'
+    'Others': '/assets/bank-logos/Others.jpg'
 }
 
 # Updated bank color scheme [Remains the same]
