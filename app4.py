@@ -27,7 +27,7 @@ monthly_data = pd.DataFrame({
     'DLocal_TTS_count': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 0]
 })
 
-# Bank distribution data
+# Bank distribution data [Remains the same]
 bank_distribution = {
     'LEMFI': {
         'KCB': 46.1, 
@@ -56,7 +56,7 @@ bank_distribution = {
     }
 }
 
-# Dictionary for bank logo paths
+# Dictionary for bank logo paths [Remains the same]
 bank_logos = {
     'KCB': '/assets/bank-logos/KCB.png',
     'DTB': '/assets/bank-logos/DTB.png',
@@ -67,7 +67,7 @@ bank_logos = {
     'Others': '/assets/bank-logos/Others.png'
 }
 
-# Updated bank color scheme
+# Updated bank color scheme [Remains the same]
 bank_colors = {
     'KCB': '#008000',      # Green
     'DTB': '#FF0000',      # Red
@@ -93,41 +93,17 @@ app = dash.Dash(
 # This is important for Render deployment
 server = app.server
 
-# Enhanced Custom CSS with updated dark mode support
+# Enhanced Custom CSS with responsive features
 app.index_string = '''<!DOCTYPE html>
 <html>
     <head>
         {%metas%}
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Partner Report</title>
         {%favicon%}
         {%css%}
         <style>
-            :root {
-                --background-light: #ffffff;
-                --card-bg-light: #ffffff;
-                --text-light: #2c3e50;
-                --border-light: #dee2e6;
-                
-                --background-dark: #121212;
-                --card-bg-dark: #1e1e1e;
-                --text-dark: #ffffff;
-                --border-dark: #404040;
-            }
-
             * {
                 font-family: 'Bebas Neue', sans-serif;
-                transition: background-color 0.3s ease, color 0.3s ease;
-            }
-            
-            body {
-                background-color: var(--background-light);
-                color: var(--text-light);
-            }
-
-            .title-text {
-                color: #2c3e50;
-                transition: color 0.3s ease;
             }
             
             .regular-text {
@@ -142,14 +118,11 @@ app.index_string = '''<!DOCTYPE html>
                 margin-bottom: 1rem;
                 border-radius: 15px;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                transition: all 0.3s ease;
-                background-color: var(--card-bg-light);
-                border: 1px solid var(--border-light);
+                transition: transform 0.2s;
             }
             
             .card:hover {
                 transform: translateY(-5px);
-                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }
             
             .partner-logo {
@@ -157,14 +130,6 @@ app.index_string = '''<!DOCTYPE html>
                 height: 100px;
                 object-fit: contain;
                 margin: 10px;
-                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-            }
-
-            .partner-logo-title {
-                max-width: 120px;
-                max-height: 80px;
-                object-fit: contain;
-                transition: transform 0.3s ease;
             }
             
             .market-share-card {
@@ -172,20 +137,14 @@ app.index_string = '''<!DOCTYPE html>
             }
             
             .logo {
-                transition: all 0.3s ease;
-                filter: none;
+                transition: transform 0.3s ease;
             }
             
             .logo:hover {
                 transform: scale(1.05);
             }
-
-            .title-card {
-                background-color: var(--card-bg-light);
-                border-color: var(--border-light);
-            }
-
-            /* Chart Styles */
+            
+            /* Enhanced Responsive Styles */
             .js-plotly-plot {
                 width: 100% !important;
             }
@@ -193,99 +152,101 @@ app.index_string = '''<!DOCTYPE html>
             .js-plotly-plot .plotly {
                 width: 100% !important;
             }
-
-            /* Table Styles */
-            .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner {
-                background-color: var(--card-bg-light);
-                color: var(--text-light);
-            }
-
-            .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner td,
-            .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th {
-                border-color: var(--border-light);
-            }
-
-            /* Dark Mode */
-            @media (prefers-color-scheme: dark) {
-                body {
-                    background-color: var(--background-dark);
-                    color: var(--text-dark);
-                }
-
-                .title-text {
-                    color: #ffffff !important;
+            
+            @media (max-width: 768px) {
+                .partner-logo {
+                    width: 60px;
+                    height: 60px;
+                    margin: 5px;
                 }
                 
                 .card {
-                    background-color: var(--card-bg-dark);
-                    border-color: var(--border-dark);
-                    color: var(--text-dark);
+                    margin-bottom: 0.5rem;
+                }
+                
+                h1 {
+                    font-size: 1.8rem !important;
+                }
+                
+                h3 {
+                    font-size: 1.4rem !important;
+                }
+                
+                h4 {
+                    font-size: 1.2rem !important;
+                }
+                
+                h5 {
+                    font-size: 1rem !important;
+                }
+                
+                .dash-table-container {
+                    overflow-x: auto;
+                }
+                
+                .card-body {
+                    padding: 0.75rem;
+                }
+                
+                .mobile-stack {
+                    flex-direction: column;
+                }
+                
+                .mobile-full-width {
+                    width: 100% !important;
+                }
+                
+                .mobile-text-small {
+                    font-size: 0.9rem !important;
+                }
+                
+                .mobile-chart-height {
+                    height: 300px !important;
+                }
+            }
+            
+            @media (max-width: 576px) {
+                .partner-logo {
+                    width: 50px;
+                    height: 50px;
+                }
+                
+                h1 {
+                    font-size: 1.5rem !important;
+                }
+                
+                .mobile-padding {
+                    padding: 0.5rem !important;
+                }
+                
+                .mobile-margin {
+                    margin: 0.5rem !important;
+                }
+            }
+            
+            /* Dark mode support */
+            @media (prefers-color-scheme: dark) {
+                .card {
+                    background-color: #2c3e50;
+                    color: #ecf0f1;
                 }
                 
                 .market-share-card {
-                    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+                    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
                 }
                 
-                .title-card {
-                    background-color: var(--card-bg-dark);
-                    border-color: var(--border-dark);
-                }
-
-                .btn-light {
-                    background-color: #2d2d2d;
-                    border-color: var(--border-dark);
-                    color: var(--text-dark);
-                }
-
-                .btn-light:hover {
-                    background-color: #3d3d3d;
-                    border-color: #505050;
-                }
-
-                .logo {
-                    filter: invert(1) brightness(100%);
-                }
-
-                /* Dark mode chart improvements */
-                .js-plotly-plot .plotly .main-svg {
-                    background-color: var(--card-bg-dark) !important;
-                }
-
-                .js-plotly-plot .plotly .gridlayer path {
-                    stroke: var(--border-dark) !important;
-                }
-
-                .js-plotly-plot .plotly .ticktext,
-                .js-plotly-plot .plotly .legendtext,
-                .js-plotly-plot .plotly .gtitle {
-                    fill: var(--text-dark) !important;
-                }
-
-                /* Dark mode table improvements */
-                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner {
-                    background-color: var(--card-bg-dark);
-                    color: var(--text-dark);
-                }
-
-                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner td,
-                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner th {
-                    background-color: var(--card-bg-dark) !important;
-                    color: var(--text-dark) !important;
-                    border-color: var(--border-dark) !important;
-                }
-
-                .dash-table-container .dash-spreadsheet-container .dash-spreadsheet-inner td.dash-cell-value {
-                    background-color: #2d2d2d !important;
-                }
-
                 .text-primary {
-                    color: #ffffff !important;
+                    color: #3498db !important;
+                }
+                
+                .text-success {
+                    color: #2ecc71 !important;
+                }
+                
+                .text-info {
+                    color: #3498db !important;
                 }
             }
-
-            /* Responsive Styles [Rest of the responsive styles remain the same] */
-            ...
-
         </style>
     </head>
     <body>
@@ -317,13 +278,13 @@ app.layout = dbc.Container([
                 'display': 'flex',
                 'justifyContent': 'center',
                 'alignItems': 'center',
-                'padding': '40px',
-                'marginBottom': '30px',
+                'padding': {'xs': '20px', 'md': '40px'},
+                'marginBottom': {'xs': '15px', 'md': '30px'},
                 'width': '100%'
             }, className="mobile-padding"),
             html.H1(
                 "Partner Report",
-                className="title-text text-center mb-4",
+                className="text-primary text-center mb-4",
                 style={'letterSpacing': '2px'}
             )
         ])
@@ -416,17 +377,6 @@ app.layout = dbc.Container([
         ], xs=12, sm=6, md=3, className="mb-3"),
     ], className="mb-4 g-2"),
 
-    # Title card for selected partner
-    dbc.Row([
-        dbc.Col([
-            html.Div(
-                id="selected-partner-title",
-                children=[],
-                className="mb-4"
-            )
-        ], width=12)
-    ]),
-
     # Content section with responsive container
     dbc.Row([
         dbc.Col([
@@ -440,8 +390,7 @@ app.layout = dbc.Container([
 ], fluid=True, className="px-2 px-md-4")
 
 @app.callback(
-    [Output("partner-details", "children"),
-     Output("selected-partner-title", "children")],
+    Output("partner-details", "children"),
     [Input("LEMFI-logo", "n_clicks"),
      Input("NALA-logo", "n_clicks"),
      Input("Cellulant-logo", "n_clicks"),
@@ -449,7 +398,7 @@ app.layout = dbc.Container([
 )
 def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_clicks):
     if not ctx.triggered:
-        return [], []
+        return []
 
     triggered_id = ctx.triggered[0]['prop_id'].split('.')[0]
     partner = triggered_id.replace("-logo", "")
@@ -461,31 +410,6 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         data_column = partner
         count_column = f"{partner}_count"
 
-    # Create title card
-    title_card = dbc.Card([
-        dbc.CardBody([
-            dbc.Row([
-                dbc.Col([
-                    html.Img(
-                        src=f'/assets/partner-logos/{partner}.png',
-                        style={
-                            'height': '80px',
-                            'objectFit': 'contain'
-                        },
-                        className="partner-logo-title"
-                    )
-                ], width={'size': 3, 'order': 'first'}),
-                dbc.Col([
-                    html.H2(
-                        partner,
-                        className="text-center mb-0 partner-title title-text"
-                    )
-                ], width={'size': 6}, className="d-flex align-items-center justify-content-center"),
-                dbc.Col(width={'size': 3, 'order': 'last'})
-            ], className="align-items-center")
-        ])
-    ], className="shadow-sm title-card")
-
     # Extract partner-specific data
     partner_data = monthly_data[["Month", data_column, count_column]].copy()
     partner_data.columns = ["Month", "Volume", "Count"]
@@ -496,7 +420,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     total_count = partner_data['Count'].sum()
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
-        # Create responsive combined volume and count chart
+    # Create responsive combined volume and count chart
     combined_chart = go.Figure()
     
     # Add Volume line
@@ -695,7 +619,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         legend=dict(orientation="h", y=-0.1)
     )
 
-    # Return the complete responsive layout with title card
+    # Return the complete responsive layout
     return [
         dbc.Row([
             dbc.Col([
@@ -707,7 +631,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                     ])
                 ])
             ], xs=12, sm=12, md=4, className="mb-3"),
-                        dbc.Col([
+            dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
                         html.H5("Total Transactions", className="text-center mobile-text-small"),
@@ -836,7 +760,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
                 ], className="shadow-sm")
             ], width=12)
         ], className="mb-4")
-    ], title_card
+    ]
 
 # Run the server
 if __name__ == '__main__':
