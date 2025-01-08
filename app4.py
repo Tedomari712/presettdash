@@ -437,32 +437,28 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     total_count = partner_data['Count'].sum()
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
-    # Title card with partner logo
+    # Title card with partner logo with responsive sizing
     partner_logo_map = {
-        "LEMFI": "LEMFI.png",
-        "NALA": "Nala.png",
-        "Cellulant": "Cellulant.png",
-        "DLocal": "DLocal.png"
+        "LEMFI": {"file": "LEMFI.png", "pc_height": "150px", "mobile_height": "100px"},
+        "NALA": {"file": "Nala.png", "pc_height": "100px", "mobile_height": "150px"},
+        "Cellulant": {"file": "Cellulant.png", "pc_height": "100px", "mobile_height": "150px"},
+        "DLocal": {"file": "DLocal.png", "pc_height": "100px", "mobile_height": "150px"}
     }
-
-    logo_height = '100px'
-    if partner == "LEMFI":
-        logo_height = '200px'
     
     title_card = dbc.Card([
         dbc.CardBody([
             html.Div([
                 html.Img(
-                    src=f'/assets/partner-logos/{partner_logo_map[partner]}',
+                    src=f'/assets/partner-logos/{partner_logo_map[partner]["file"]}',
+                    className="title-partner-logo",
                     style={
-                        'height': '100px',
                         'objectFit': 'contain',
                         'marginBottom': '10px'
                     }
                 )
             ], className="text-center")
         ])
-    ], className="shadow-sm mb-4")
+    ], className=f"shadow-sm mb-4 {partner}")
 
     # Create responsive combined volume and count chart
     combined_chart = go.Figure()
