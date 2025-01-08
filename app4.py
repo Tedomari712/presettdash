@@ -439,19 +439,20 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
 
     # Title card with partner logo with responsive sizing
     partner_logo_map = {
-        "LEMFI": {"file": "LEMFI.png", "pc_height": "150px", "mobile_height": "100px"},
-        "NALA": {"file": "Nala.png", "pc_height": "100px", "mobile_height": "150px"},
-        "Cellulant": {"file": "Cellulant.png", "pc_height": "100px", "mobile_height": "150px"},
-        "DLocal": {"file": "DLocal.png", "pc_height": "100px", "mobile_height": "150px"}
+        "LEMFI": "LEMFI.png",
+        "NALA": "Nala.png",
+        "Cellulant": "Cellulant.png",
+        "DLocal": "DLocal.png"
     }
     
     title_card = dbc.Card([
         dbc.CardBody([
             html.Div([
                 html.Img(
-                    src=f'/assets/partner-logos/{partner_logo_map[partner]["file"]}',
+                    src=f'/assets/partner-logos/{partner_logo_map[partner]}',
                     className="title-partner-logo",
                     style={
+                        'height': '60px',  # Default size
                         'objectFit': 'contain',
                         'marginBottom': '10px'
                     }
