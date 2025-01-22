@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 import plotly.graph_objects as go
 import pandas as pd
 
-# Transaction data (monthly_data)
+# Monthly_data
 monthly_data = pd.DataFrame({
     'Month': [
         'Sep\'23', 'Oct\'23', 'Nov\'23', 'Dec\'23', 'Jan\'24', 'Feb\'24',
@@ -27,7 +27,7 @@ monthly_data = pd.DataFrame({
     'DLocal_TTS_count': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 4, 0]
 })
 
-# Bank distribution data [Remains the same]
+# Bank distribution data
 bank_distribution = {
     'LEMFI': {
         'KCB': 46.1, 
@@ -56,7 +56,7 @@ bank_distribution = {
     }
 }
 
-# Dictionary for bank logo paths [Remains the same]
+# Bank logo paths
 bank_logos = {
     'KCB': '/assets/bank-logos/KCB.png',
     'DTB': '/assets/bank-logos/DTB.png',
@@ -67,18 +67,18 @@ bank_logos = {
     'Others': '/assets/bank-logos/Others.jpg'
 }
 
-# Updated bank color scheme [Remains the same]
+# Bank color scheme
 bank_colors = {
-    'KCB': '#008000',      # Green
-    'DTB': '#FF0000',      # Red
-    'NCBA': '#000000',     # Black
-    'Prime': '#00008B',    # Dark Blue
-    'SBM': '#87CEEB',      # Light Blue
-    'Others': '#FFD700',   # Yellow
-    'Standard Investment Bank': '#00008B'  # Dark Blue
+    'KCB': '#008000',      
+    'DTB': '#FF0000',      
+    'NCBA': '#000000',     
+    'Prime': '#00008B',    
+    'SBM': '#87CEEB',      
+    'Others': '#FFD700',   
+    'Standard Investment Bank': '#00008B'  
 }
 
-# Initialize the app with custom styling
+# App initialization
 app = dash.Dash(
     __name__, 
     external_stylesheets=[
@@ -92,7 +92,7 @@ app = dash.Dash(
 
 server = app.server
 
-# Enhanced Custom CSS with responsive features and improved dark mode
+# Custom CSS 
 app.index_string = '''<!DOCTYPE html>
 <html>
     <head>
@@ -276,9 +276,9 @@ app.index_string = '''<!DOCTYPE html>
     </body>
 </html>'''
 
-# App layout with enhanced responsive features
+# App layout 
 app.layout = dbc.Container([
-    # Enhanced Header with responsive logo and title
+    # Header
     dbc.Row([
         dbc.Col([
             html.Div([
@@ -307,7 +307,7 @@ app.layout = dbc.Container([
         ])
     ]),
 
-    # Enhanced Partner selection row with responsive cards
+    # Partner selection row
     dbc.Row([
         # LEMFI Card
         dbc.Col([
@@ -394,7 +394,7 @@ app.layout = dbc.Container([
         ], xs=12, sm=6, md=3, className="mb-3"),
     ], className="mb-4 g-2"),
 
-    # Content section with responsive container
+    # Content section 
     dbc.Row([
         dbc.Col([
             html.Div(
@@ -437,7 +437,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
     total_count = partner_data['Count'].sum()
     avg_transaction = total_volume / total_count if total_count > 0 else 0
 
-    # Title card with partner logo with responsive sizing
+    # Title card with partner logo 
     partner_logo_map = {
         "LEMFI": "LEMFI.png",
         "NALA": "Nala.png",
@@ -461,10 +461,10 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         ])
     ], className=f"shadow-sm mb-4 {partner}")
 
-    # Create responsive combined volume and count chart
+    # Combined volume and count chart
     combined_chart = go.Figure()
     
-    # Add Volume line
+    # Volume line
     combined_chart.add_trace(go.Scatter(
         x=partner_data['Month'],
         y=partner_data['Volume'],
@@ -473,7 +473,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         line=dict(color='#2E86C1', width=3)
     ))
     
-    # Add Count bars
+    # Count bars
     combined_chart.add_trace(go.Bar(
         x=partner_data['Month'],
         y=partner_data['Count'],
@@ -656,7 +656,7 @@ def display_partner_details(lemfi_clicks, nala_clicks, cellulant_clicks, dlocal_
         legend=dict(orientation="h", y=-0.1)
     )
 
-    # Enhanced transaction table
+    # Transaction table
     transaction_table = dash_table.DataTable(
         data=partner_data.to_dict('records'),
         columns=[
